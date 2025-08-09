@@ -4,46 +4,36 @@
 #include <string.h>  
 #include <stdbool.h>
 
-//структури  
-
-// структура для зберігання дати
-// рік
-// місяць
-// день
 struct Date {
 	int year;
 	int month;
 	int day;
 };
 
-// стать
 enum Sex
 {
 	male,
 	female
 };
 
-// структура для зберігання інформації про студента
 struct Student {
-	char name[50]; // ім'я студента
-	char surname[50]; // ім'я студента
-	char patronymic[50]; // по батькові студента
+	char name[50]; 
+	char surname[50]; 
+	char patronymic[50]; 
 
-	struct Date birthDate; // дата народження студента
+	struct Date birthDate; /
 
-	char group[10]; // група студента
+	char group[10]; 
 
-	enum Sex sex; // стать студента 
+	enum Sex sex; 
 };
 
-// defining a node
 typedef struct LList {
 	struct Student data;
 	struct LList* next;
 	struct LList* prev;
 } LList;
-
-// прототипи функцій  
+ 
 int main();
 int myinput();
 int mystringinput(char* line, int bufsize);
@@ -55,9 +45,6 @@ void deleteLList(LList** head, char* name, char* surname);
 void printLList(LList* head);
 void saveToFile(LList* head, const char* filename);
 void loadFromFile(LList** head, const char* filename);
-
-
-// функції для енумів і структур
 
 int sexToString(enum Sex val, char* result)
 {   
@@ -85,9 +72,6 @@ enum Sex sexFromString(const char* str)
 	return female;
 }
 
-
-
-// перевірки вводу  
 int myinput()
 {
 	char line[256];
@@ -95,8 +79,7 @@ int myinput()
 	while (1)
 	{
 		if (fgets(line, sizeof(line), stdin)) {
-			if (1 == sscanf(line, "%d", &i)) {
-				// 1 - кількість зчитаних змінних  
+			if (1 == sscanf(line, "%d", &i)) { 
 				break;
 			}
 			else
@@ -116,23 +99,18 @@ int myinput()
 int mystringinput(char* line, int bufsize)
 {
 	while (1)
-	{
-		// очищуємо буфер  
+	{ 
 		memset(line, 0, bufsize);
-		// зчитуємо рядок з клавіатури  
 		fgets(line, bufsize, stdin);
 
 		if (strchr(line, '\n'))
 		{
-			// видаляємо символ нового рядка з кінця рядка
 			line[strcspn(line, "\n")] = 0;
 		}
 		else
 		{
-			// очищуємо буфер, якщо рядок не помістився в буфер
 			while (getchar() != '\n');
 		}
-		// перевіряємо, чи рядок не порожній
 		if (strlen(line) == 0) {
 			fprintf(stdout, "Empty string, please enter a valid string:\n");
 		}
@@ -145,22 +123,17 @@ int mystringinput(char* line, int bufsize)
 		}
 	}
 
-	// виводимо рядок на екран
 	fprintf(stdout, "Parsed string: %s \n", line);
 
 	return 0;
 }
 
-// Doubly Linked List
-
-
-// Function to create a new node with given value as data
 LList* createLList(struct Student data)
 {
 	LList* newNode = (LList*)malloc(sizeof(LList));
 	if (newNode == NULL) {
 		fprintf(stderr, "Memory allocation failed for new node.\n");
-		exit(EXIT_FAILURE); // Критична помилка(
+		exit(EXIT_FAILURE); 
 	}
 	newNode->data = data;
 	newNode->next = NULL;
@@ -168,13 +141,10 @@ LList* createLList(struct Student data)
 	return newNode;
 }
 
-// Function to insert a node at the beginning
 void insertLList(LList** head, struct Student data)
 {
-	// creating new node
 	LList* newNode = createLList(data);
 
-	// check if DLL is empty
 	if (*head == NULL) {
 		*head = newNode;
 		return;
@@ -238,8 +208,6 @@ void printLList(LList* head)
 	printf("\n");
 }
 
-// Робота з файлами
-
 void saveToFile(LList* head, const char* filename) 
 {
 	FILE* file = fopen(filename, "w");
@@ -282,10 +250,10 @@ void loadFromFile(LList** head, const char* filename)
 		if (strchr(line, '|') == NULL)
 		{
 			fprintf(stdout, "Invalid line format: %s", line);
-			continue; // пропускаємо некоректні рядки
+			continue; 
 		}
 
-		struct Student student = { 0 }; // ініціалізуємо структуру студента
+		struct Student student = { 0 }; 
 
 		char* part;
 		part = strtok(line, "|");
@@ -296,33 +264,33 @@ void loadFromFile(LList** head, const char* filename)
 			case 0:
 			{
 				strncpy(student.name, part, sizeof(student.name) - 1);
-				student.name[sizeof(student.name) - 1] = '\0'; // безпечне копіювання
+				student.name[sizeof(student.name) - 1] = '\0'; 
 				break;
 			}
 			case 1:
 			{
 				strncpy(student.surname, part, sizeof(student.surname) - 1);
-				student.surname[sizeof(student.surname) - 1] = '\0'; // безпечне копіювання
+				student.surname[sizeof(student.surname) - 1] = '\0'; 
 				break;
 			}
 			case 2:
 			{
 				strncpy(student.patronymic, part, sizeof(student.patronymic) - 1);
-				student.patronymic[sizeof(student.patronymic) - 1] = '\0'; // безпечне копіювання
+				student.patronymic[sizeof(student.patronymic) - 1] = '\0'; 
 				break;
 			}
 			case 3:
 			{
 				if (sscanf(part, "%d-%02d-%02d", &student.birthDate.year, &student.birthDate.month, &student.birthDate.day) != 3) {
 					fprintf(stdout, "Invalid date format: %s", part);
-					continue; // пропускаємо некоректні рядки
+					continue; 
 				}
 				break;
 			}
 			case 4:
 			{
 				strncpy(student.group, part, sizeof(student.group) - 1);
-				student.group[sizeof(student.group) - 1] = '\0'; // безпечне копіювання
+				student.group[sizeof(student.group) - 1] = '\0'; 
 				break;
 			}
 			case 5:
@@ -336,35 +304,21 @@ void loadFromFile(LList** head, const char* filename)
 
 			part = strtok(NULL, "|");
 		}
-		// Перевірка на коректність введених даних
 		if (strlen(student.name) > 0 && strlen(student.surname) > 0) {
 			insertLList(head, student);
 		}
 
 	}
 
-
-
 	fclose(file);
 }
 
-// функції  
-
-//БД Студентів.При старті - програма пропонує користувачу 3 опції: 
-// - вивести список студентів(виводити лише прізвище, ім'я, групу), 
-// - добавити нового студента (порядок - не важливий), вивести існуючого студента (пошук за прізвищем та ім'ям, виводити повністю всю інформацію), 
-// - видалити існуючого студента(за прізвищем та ім'ям). 
-// Інформація про студента повинна містити прізвище, ім'я, по - батькові, дату народження(оголосити для цього окрему структуру, повинна містити рік, місяць, день), групу в якій навчається(char*), стать(enum).
-// Список студентів необхідно зберігати у зв'язному списку. 
-// При виході з програми - всі дані повинні зберігатись у текстовому файлі data.txt. 
-// При старті програми відповідно всі дані з файлу повинні загружатись 
-// (передбачте випадок що файлу може не існувати - у цьому випадку програма запускається як ніби база пуста, потім можливо добавити студента, програма на виході має створити файл data.txt). 
 int main()
 {
-	LList* head = NULL; // голова списку
+	LList* head = NULL; 
 	int choice;
-	char filename[] = "data.txt"; // ім'я файлу для збереження даних
-	loadFromFile(&head, filename); // завантаження даних з файлу при старті програми
+	char filename[] = "data.txt"; 
+	loadFromFile(&head, filename); 
     bool run = true; 
 	while (run)
 	{
@@ -391,7 +345,7 @@ int main()
 			mystringinput(dateInput, sizeof(dateInput));
 			if (sscanf(dateInput, "%d-%d-%d", &newStudent.birthDate.year, &newStudent.birthDate.month, &newStudent.birthDate.day)!=3) {
 				fprintf(stdout, "Invalid date format. Please use YYYY-MM-DD.\n");
-				continue; // пропускаємо некоректні дати
+				continue; 
 			}
 			char sexInput[10];
 			fprintf(stdout, "Enter student's sex (male or famale):\n");
@@ -423,9 +377,8 @@ int main()
 		}
 	}
 
-	saveToFile(head, filename); // збереження даних у файл перед виходом
+	saveToFile(head, filename); 
 
-	// Освобождаємо память	
 	LList* current = head;
 	while (current != NULL) {
 		LList* next = current->next;
@@ -435,5 +388,3 @@ int main()
 	fprintf(stdout, "Exiting program.\n");
 	return 0;
 }
-
-
