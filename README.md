@@ -12,7 +12,7 @@ A small console application in C for storing a list of students in a doubly link
 - `struct Student` — first name, last name, middle name, `struct Date {year, month, day}`, group, gender (`enum Sex { male, female }`).
 - Data is stored in a doubly linked list `LList`.
 
-##Application menu
+## Application menu
 - Print list of students
 - Add student
 - Delete student
